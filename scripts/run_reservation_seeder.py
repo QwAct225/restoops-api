@@ -20,7 +20,7 @@ def main():
         seeder.seed_sample_data()
         seeder.display_data()
         
-        data_folder = os.path.join(os.path.dirname(__file__), '..', 'data')
+        data_folder = os.path.join(os.path.dirname(__file__), '..', 'data', 'raw')
         os.makedirs(data_folder, exist_ok=True)
         
         csv_path = os.path.join(data_folder, "raw_reservation_data.csv")
