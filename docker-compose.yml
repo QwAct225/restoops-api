@@ -1,0 +1,85 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:17
+    container_name: restoops_postgres
+    restart: always
+    environment:
+      POSTGRES_DB: ${DB_NAME:-restoops}
+      POSTGRES_USER: ${DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASS:-restoops123}
+      POSTGRES_HOST_AUTH_METHOD: md5
+      PGDATA: /var/lib/postgresql/data/pgdata
+      POSTGRES_INITDB_ARGS: "-c checkpoint_timeout=15min -c log_checkpoints=off -c log_statement=none"
+    command:
+      - "postgres"
+      - "-c"
+      - "checkpoint_timeout=15min"
+      - "-c"
+      - "log_checkpoints=off"
+      - "-c"
+      - "log_statement=none"
+      - "-c"
+      - "logging_collector=off"
+      - "-c"
+      - "shared_buffers=256MB"
+      - "-c"
+      - "max_connections=100"
+      - "-c"
+      - "work_mem=8MB"
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./sql/init-database.sql:/docker-entrypoint-initdb.d/01-init-database.sql:ro
+      - ./sql/init-tables.sql:/docker-entrypoint-initdb.d/02-init-tables.sql:ro
+      - ./sql/load-data.sql:/docker-entrypoint-initdb.d/03-load-data.sql:ro
+      - ./data/processed:/docker-entrypoint-initdb.d/data:ro
+    networks:
+      - restoops_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres} -h localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    stop_grace_period: 30s
+    stop_signal: SIGTERM
+
+  api:
+    build:
+      context: .
+      dockerfile: ./api/Dockerfile
+    container_name: restoops_api
+    restart: always
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DB_NAME: ${DB_NAME:-restoops}
+      DB_USER: ${DB_USER:-postgres}
+      DB_PASS: ${DB_PASS:-restoops123}
+      DB_HOST: postgres
+      DB_PORT: 5432
+      API_DEBUG: ${API_DEBUG:-True}
+    ports:
+      - "8001:8000"
+    volumes:
+      - ./api:/app
+      - ./data:/app/data
+    networks:
+      - restoops_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  restoops_network:
+    driver: bridge
