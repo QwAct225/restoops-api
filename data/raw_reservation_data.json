@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "name": "John Doe",
+    "reservation_table": 11,
+    "token": "P9DNGK6A1X",
+    "ordered_menu": "[3[LEVEL 2], [16]]",
+    "duration": 5
+  },
+  {
+    "id": 2,
+    "name": "Bob Hob",
+    "reservation_table": 7,
+    "token": "WA3UGWZLNL",
+    "ordered_menu": "[4[LEVEL 4], [8]]",
+    "duration": 4
+  },
+  {
+    "id": 3,
+    "name": "Alice Smith",
+    "reservation_table": 3,
+    "token": "CM9JNQG0WY",
+    "ordered_menu": "[1[CHOCOLATE], 16[HOT], [6]]",
+    "duration": 3
+  },
+  {
+    "id": 4,
+    "name": "Michael Chen",
+    "reservation_table": 15,
+    "token": "QHG902GCU0",
+    "ordered_menu": "[3[LEVEL 0], [11], 19[ICED]]",
+    "duration": 6
+  },
+  {
+    "id": 5,
+    "name": "Sarah Johnson",
+    "reservation_table": 8,
+    "token": "G2VNU9RXAZ",
+    "ordered_menu": "[4[LEVEL 6 (+Rp 910)], [7], 22[ICED]]",
+    "duration": 4
+  }
+]

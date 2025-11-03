@@ -33,9 +33,11 @@ def main():
             
             data_folder = os.path.join(os.path.dirname(__file__), '..', 'data')
             os.makedirs(data_folder, exist_ok=True)
-            csv_filename = f"raw_menu_data.csv"
-            csv_path = os.path.join(data_folder, csv_filename)
-            scraper.save_to_csv(csv_path)
+            
+            raw_csv_path = os.path.join(data_folder, "raw_menu_data.csv")
+            raw_json_path = os.path.join(data_folder, "raw_menu_data.json")
+            scraper.save_to_csv(raw_csv_path)
+            scraper.save_to_json(raw_json_path)
             
             print("\n" + "="*60)
             print("SCRAPING SELESAI!")
