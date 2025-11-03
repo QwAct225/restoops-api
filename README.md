@@ -28,4 +28,5 @@ adalah platform backend untuk manajemen operasional restoran end-to-end: mulai d
 
     ```bash
     python scripts/run_scraper.py
+    python scripts/run_reservation_seeder.py
     ```

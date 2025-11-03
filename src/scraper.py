@@ -326,6 +326,19 @@ class MenuScraper:
         df.to_csv(output_path, index=False, encoding='utf-8-sig', quoting=1)  
         print(f"\nData berhasil disimpan ke: {output_path}")
         print(f"Total menu: {len(self.menu_data)}")
+    
+    def save_to_json(self, output_path):
+        if not self.menu_data:
+            print("Tidak ada data untuk disimpan")
+            return
+        
+        import json
+        
+        with open(output_path, 'w', encoding='utf-8') as f:
+            json.dump(self.menu_data, f, indent=2, ensure_ascii=False)
+        
+        print(f"\nData berhasil disimpan ke: {output_path}")
+        print(f"Total menu: {len(self.menu_data)}")
         
         
     def get_dataframe(self):
