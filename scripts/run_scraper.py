@@ -31,7 +31,7 @@ def main():
             df = scraper.get_dataframe()
             print(df.to_string(index=False))
             
-            data_folder = os.path.join(os.path.dirname(__file__), '..', 'data')
+            data_folder = os.path.join(os.path.dirname(__file__), '..', 'data', 'raw')
             os.makedirs(data_folder, exist_ok=True)
             
             raw_csv_path = os.path.join(data_folder, "raw_menu_data.csv")

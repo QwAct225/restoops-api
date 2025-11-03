@@ -1,0 +1,204 @@
+[
+  {
+    "id": 1,
+    "nama_menu": "SUNDAE",
+    "harga": 10000,
+    "variants": [
+      "CHOCOLATE",
+      "OREO",
+      "STRAWBERRY"
+    ],
+    "sold_out": "No"
+  },
+  {
+    "id": 2,
+    "nama_menu": "ICE CREAM CONE",
+    "harga": 7273,
+    "variants": null,
+    "sold_out": "No"
+  },
+  {
+    "id": 3,
+    "nama_menu": "MIE GACOAN",
+    "harga": 10910,
+    "variants": [
+      "LEVEL 0",
+      "LEVEL 1",
+      "LEVEL 2",
+      "LEVEL 3",
+      "LEVEL 4",
+      "LEVEL 6 (+Rp 910)",
+      "LEVEL 8 (+Rp 910)"
+    ],
+    "sold_out": "No"
+  },
+  {
+    "id": 4,
+    "nama_menu": "MIE HOMPIMPA",
+    "harga": 10910,
+    "variants": [
+      "LEVEL 1",
+      "LEVEL 2",
+      "LEVEL 3",
+      "LEVEL 4",
+      "LEVEL 6 (+Rp 910)",
+      "LEVEL 8 (+Rp 910)"
+    ],
+    "sold_out": "No"
+  },
+  {
+    "id": 5,
+    "nama_menu": "MIE SUIT",
+    "harga": 10910,
+    "variants": null,
+    "sold_out": "No"
+  },
+  {
+    "id": 6,
+    "nama_menu": "SIOMAY",
+    "harga": 10000,
+    "variants": null,
+    "sold_out": "No"
+  },
+  {
+    "id": 7,
+    "nama_menu": "UDANG RAMBUTAN",
+    "harga": 10000,
+    "variants": null,
+    "sold_out": "No"
+  },
+  {
+    "id": 8,
+    "nama_menu": "UDANG KEJU",
+    "harga": 10000,
+    "variants": null,
+    "sold_out": "No"
+  },
+  {
+    "id": 9,
+    "nama_menu": "LUMPIA UDANG",
+    "harga": 10000,
+    "variants": null,
+    "sold_out": "No"
+  },
+  {
+    "id": 10,
+    "nama_menu": "PANGSIT GORENG",
+    "harga": 10910,
+    "variants": null,
+    "sold_out": "No"
+  },
+  {
+    "id": 11,
+    "nama_menu": "ES GOBAK SODOR",
+    "harga": 9546,
+    "variants": null,
+    "sold_out": "No"
+  },
+  {
+    "id": 12,
+    "nama_menu": "ES TEKLEK",
+    "harga": 6819,
+    "variants": null,
+    "sold_out": "No"
+  },
+  {
+    "id": 13,
+    "nama_menu": "ES SLUKU BATHOK",
+    "harga": 6819,
+    "variants": null,
+    "sold_out": "No"
+  },
+  {
+    "id": 14,
+    "nama_menu": "ES PETAK UMPET",
+    "harga": 9546,
+    "variants": null,
+    "sold_out": "No"
+  },
+  {
+    "id": 15,
+    "nama_menu": "AIR MINERAL",
+    "harga": 5000,
+    "variants": null,
+    "sold_out": "No"
+  },
+  {
+    "id": 16,
+    "nama_menu": "TEA",
+    "harga": 5000,
+    "variants": [
+      "HOT",
+      "ICED"
+    ],
+    "sold_out": "No"
+  },
+  {
+    "id": 17,
+    "nama_menu": "ORANGE",
+    "harga": 5910,
+    "variants": [
+      "ICED",
+      "HOT"
+    ],
+    "sold_out": "No"
+  },
+  {
+    "id": 18,
+    "nama_menu": "LEMON TEA",
+    "harga": 6819,
+    "variants": [
+      "ICED",
+      "HOT"
+    ],
+    "sold_out": "No"
+  },
+  {
+    "id": 19,
+    "nama_menu": "CHOCOAN",
+    "harga": 8637,
+    "variants": [
+      "ICED",
+      "HOT"
+    ],
+    "sold_out": "No"
+  },
+  {
+    "id": 20,
+    "nama_menu": "VANILLA LATTE",
+    "harga": 8637,
+    "variants": [
+      "ICED",
+      "HOT"
+    ],
+    "sold_out": "No"
+  },
+  {
+    "id": 21,
+    "nama_menu": "TEH TARIK",
+    "harga": 7273,
+    "variants": [
+      "ICED",
+      "HOT"
+    ],
+    "sold_out": "No"
+  },
+  {
+    "id": 22,
+    "nama_menu": "THAI TEA",
+    "harga": 8637,
+    "variants": [
+      "ICED"
+    ],
+    "sold_out": "No"
+  },
+  {
+    "id": 23,
+    "nama_menu": "THAI GREEN TEA",
+    "harga": 8637,
+    "variants": [
+      "ICED"
+    ],
+    "sold_out": "No"
+  }
+]
