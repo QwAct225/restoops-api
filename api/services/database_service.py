@@ -61,12 +61,25 @@ class DatabaseService:
         conn = self.get_postgres_connection()
         cursor = conn.cursor()
         try:
+            import json
             columns = list(data[0].keys())
             columns_str = ", ".join(columns)
             placeholders = ", ".join(["%s"] * len(columns))
             
             query = f"INSERT INTO {table_name} ({columns_str}) VALUES ({placeholders})"
-            values = [tuple(record[col] for col in columns) for record in data]
+            
+            values = []
+            for record in data:
+                row = []
+                for col in columns:
+                    value = record[col]
+                    if col == 'variants' and isinstance(value, str) and value:
+                        try:
+                            value = json.loads(value)
+                        except:
+                            pass 
+                    row.append(value)
+                values.append(tuple(row))
             
             cursor.executemany(query, values)
             conn.commit()
