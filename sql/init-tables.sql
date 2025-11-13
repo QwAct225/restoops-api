@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS menu_data (
     id BIGINT PRIMARY KEY,
     nama_menu VARCHAR(200) NOT NULL,
     harga DECIMAL(10,2) NOT NULL,
-    variants TEXT,
+    variants JSONB,
     sold_out VARCHAR(10) DEFAULT 'No',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
