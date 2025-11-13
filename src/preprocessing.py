@@ -2,8 +2,6 @@ import pandas as pd
 import numpy as np
 import json
 import os
-
-
 class MenuPreprocessing:
     def __init__(self, input_path):
         self.input_path = input_path

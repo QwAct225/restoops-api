@@ -8,17 +8,7 @@ router = APIRouter(prefix="/sync", tags=["Data Sync"])
 
 @router.post("/menu")
 def sync_menu_data():
-    """
-    Sync menu data from processed CSV to PostgreSQL
-    
-    Reads data from data/processed/menu_data.csv and inserts into menu_data table.
-    This endpoint should be called after preprocessing is complete.
-    
-    Returns:
-        JSON with sync status and record count
-    """
     try:
-        # Path to processed menu data
         csv_path = "/app/data/processed/menu_data.csv"
         
         if not os.path.exists(csv_path):
@@ -27,19 +17,10 @@ def sync_menu_data():
                 "detail": f"File not found: {csv_path}"
             }
         
-        # Read CSV data
         df = pd.read_csv(csv_path)
-        
-        # Convert DataFrame to list of dictionaries
         records = df.to_dict(orient="records")
-        
-        # Prepare data for insertion
         db_service = DatabaseService()
-        
-        # Clear existing data
         db_service.execute_query("TRUNCATE TABLE menu_data CASCADE")
-        
-        # Insert new data
         success = db_service.bulk_insert("menu_data", records)
         
         if success:

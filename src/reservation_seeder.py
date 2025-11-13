@@ -3,8 +3,6 @@ import string
 import pandas as pd
 import json
 from datetime import datetime
-
-
 class ReservationSeeder:
     def __init__(self):
         self.reservations = []
