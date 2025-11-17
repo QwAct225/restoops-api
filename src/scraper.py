@@ -169,7 +169,7 @@ class MenuScraper:
                     
                     sold_out_element = item.find('div', class_='sold-out-badge')
                     is_sold_out = sold_out_element is not None
-                    variants = self._get_menu_variants_by_index(idx - 1, menu_name)
+                    variants, image_url = self._get_menu_variants_by_index(idx - 1, menu_name)
                     variants_str = str(variants) if variants else "[]"
                     
                     menu_dict = {
@@ -177,7 +177,8 @@ class MenuScraper:
                         'nama_menu': menu_name,
                         'harga': menu_price_clean,
                         'variants': variants_str,
-                        'sold_out': 'Yes' if is_sold_out else 'No'
+                        'sold_out': 'Yes' if is_sold_out else 'No',
+                        'image_url': image_url if image_url else 'N/A'
                     }
                     
                     self.menu_data.append(menu_dict)
@@ -203,12 +204,13 @@ class MenuScraper:
     
     def _get_menu_variants_by_index(self, menu_index, menu_name):
         variants = []
+        image_url = None
         
         try:
             menu_elements = self.driver.find_elements(By.CLASS_NAME, "menu-grid-item-content")
             
             if menu_index >= len(menu_elements):
-                return variants
+                return variants, image_url
             
             menu_element = menu_elements[menu_index]
             
@@ -219,12 +221,13 @@ class MenuScraper:
             time.sleep(1.5)  
             
             variants = self._parse_variants_from_modal()
+            image_url = self._get_image_url_from_modal()
             self._close_modal()
             
         except Exception:
             pass
         
-        return variants
+        return variants, image_url
     
     def _get_menu_variants(self, menu_data_id, menu_name):
         variants = []
@@ -300,6 +303,34 @@ class MenuScraper:
                                 variants.append(text)
         
         return variants
+    
+    def _get_image_url_from_modal(self):
+        """Extract image URL from modal and convert to thumbnail version"""
+        try:
+            modal_html = self.driver.page_source
+            modal_soup = BeautifulSoup(modal_html, 'lxml')
+            
+            # Find the div with class 'menu-image-banner' that has style with background-image
+            image_banner = modal_soup.find('div', class_='menu-image-banner')
+            
+            if image_banner and image_banner.get('style'):
+                style = image_banner.get('style')
+                # Extract URL from background-image: url("...")
+                import re
+                match = re.search(r'url\(["\']?([^"\')]+)["\']?\)', style)
+                if match:
+                    url = match.group(1)
+                    # Convert _optim.webp to _thumb.webp
+                    if '_optim.webp' in url:
+                        url = url.replace('_optim.webp', '_thumb.webp')
+                    elif '.webp' in url and '_thumb.webp' not in url:
+                        # If it's a webp but not already optimized, try to add _thumb before .webp
+                        url = url.replace('.webp', '_thumb.webp')
+                    return url
+        except Exception as e:
+            print(f"  Error extracting image URL: {str(e)}")
+        
+        return None
     
     def _close_modal(self):
         try:

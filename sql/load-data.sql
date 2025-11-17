@@ -3,7 +3,7 @@
 \echo '📊 Loading data from CSV files...';
 
 \set ON_ERROR_STOP off
-\copy menu_data(id, nama_menu, harga, variants, sold_out) FROM '/docker-entrypoint-initdb.d/data/menu_data.csv' DELIMITER ',' CSV HEADER;
+\copy menu_data(id, nama_menu, harga, variants, sold_out, image_url) FROM '/docker-entrypoint-initdb.d/data/menu_data.csv' DELIMITER ',' CSV HEADER;
 \set ON_ERROR_STOP on
 
 \set ON_ERROR_STOP off

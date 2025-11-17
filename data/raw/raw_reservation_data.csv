@@ -1,6 +1,6 @@
 ﻿id,name,reservation_table,token,ordered_menu,duration
-1,John Doe,11,P9DNGK6A1X,"[3[LEVEL 2], [16]]",5
-2,Bob Hob,7,WA3UGWZLNL,"[4[LEVEL 4], [8]]",4
-3,Alice Smith,3,CM9JNQG0WY,"[1[CHOCOLATE], 16[HOT], [6]]",3
-4,Michael Chen,15,QHG902GCU0,"[3[LEVEL 0], [11], 19[ICED]]",6
-5,Sarah Johnson,8,G2VNU9RXAZ,"[4[LEVEL 6 (+Rp 910)], [7], 22[ICED]]",4
+1,John Doe,11,9MTXKLNP7Q,"[3[LEVEL 2], [16]]",5
+2,Bob Hob,7,FZM8BKY82Q,"[4[LEVEL 4], [8]]",4
+3,Alice Smith,3,5YK7DBTMY7,"[1[CHOCOLATE], 16[HOT], [6]]",3
+4,Michael Chen,15,D06ZK12ER7,"[3[LEVEL 0], [11], 19[ICED]]",6
+5,Sarah Johnson,8,XLHIVZL7UD,"[4[LEVEL 6 (+Rp 910)], [7], 22[ICED]]",4
