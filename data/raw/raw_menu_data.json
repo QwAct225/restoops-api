@@ -4,160 +4,183 @@
     "nama_menu": "SUNDAE",
     "harga": "10000",
     "variants": "['CHOCOLATE', 'OREO', 'STRAWBERRY']",
-    "sold_out": "No"
+    "sold_out": "No",
+    "image_url": "https://esb-order.oss-ap-southeast-5.aliyuncs.com/images/app/menu/MNU__20251030050702_thumb.webp"
   },
   {
     "id": 2,
     "nama_menu": "ICE CREAM CONE",
     "harga": "7273",
     "variants": "[]",
-    "sold_out": "No"
+    "sold_out": "No",
+    "image_url": "https://esb-order.oss-ap-southeast-5.aliyuncs.com/images/app/menu/MNU_549_20241022200713_thumb.webp"
   },
   {
     "id": 3,
     "nama_menu": "MIE GACOAN",
     "harga": "10910",
     "variants": "['LEVEL 0', 'LEVEL 1', 'LEVEL 2', 'LEVEL 3', 'LEVEL 4', 'LEVEL 6 (+Rp 910)', 'LEVEL 8 (+Rp 910)']",
-    "sold_out": "No"
+    "sold_out": "No",
+    "image_url": "https://esb-order.oss-ap-southeast-5.aliyuncs.com/images/app/menu/MNU_858_20251027104529_thumb.webp"
   },
   {
     "id": 4,
     "nama_menu": "MIE HOMPIMPA",
     "harga": "10910",
     "variants": "['LEVEL 1', 'LEVEL 2', 'LEVEL 3', 'LEVEL 4', 'LEVEL 6 (+Rp 910)', 'LEVEL 8 (+Rp 910)']",
-    "sold_out": "No"
+    "sold_out": "No",
+    "image_url": "https://esb-order.oss-ap-southeast-5.aliyuncs.com/images/app/menu/MNU_859_20251027104639_thumb.webp"
   },
   {
     "id": 5,
     "nama_menu": "MIE SUIT",
     "harga": "10910",
     "variants": "[]",
-    "sold_out": "No"
+    "sold_out": "No",
+    "image_url": "https://esb-order.oss-ap-southeast-5.aliyuncs.com/images/app/menu/MNU_836_20251027105030_thumb.webp"
   },
   {
     "id": 6,
     "nama_menu": "SIOMAY",
     "harga": "10000",
     "variants": "[]",
-    "sold_out": "No"
+    "sold_out": "No",
+    "image_url": "https://esb-order.oss-ap-southeast-5.aliyuncs.com/images/app/menu/MNU_27_20251101071126_thumb.webp"
   },
   {
     "id": 7,
     "nama_menu": "UDANG RAMBUTAN",
     "harga": "10000",
     "variants": "[]",
-    "sold_out": "No"
+    "sold_out": "No",
+    "image_url": "https://esb-order.oss-ap-southeast-5.aliyuncs.com/images/app/menu/MNU_32_20251031170419_thumb.webp"
   },
   {
     "id": 8,
     "nama_menu": "UDANG KEJU",
     "harga": "10000",
     "variants": "[]",
-    "sold_out": "No"
+    "sold_out": "No",
+    "image_url": "https://esb-order.oss-ap-southeast-5.aliyuncs.com/images/app/menu/MNU_31_20251031170356_thumb.webp"
   },
   {
     "id": 9,
     "nama_menu": "LUMPIA UDANG",
     "harga": "10000",
     "variants": "[]",
-    "sold_out": "No"
+    "sold_out": "No",
+    "image_url": "https://esb-order.oss-ap-southeast-5.aliyuncs.com/images/app/menu/MNU_9_20251031170259_thumb.webp"
   },
   {
     "id": 10,
     "nama_menu": "PANGSIT GORENG",
     "harga": "10910",
     "variants": "[]",
-    "sold_out": "No"
+    "sold_out": "No",
+    "image_url": "https://esb-order.oss-ap-southeast-5.aliyuncs.com/images/app/menu/MNU_26_20251031170312_thumb.webp"
   },
   {
     "id": 11,
     "nama_menu": "ES GOBAK SODOR",
     "harga": "9546",
     "variants": "[]",
-    "sold_out": "No"
+    "sold_out": "No",
+    "image_url": "https://esb-order.oss-ap-southeast-5.aliyuncs.com/images/app/menu/MNU_3_20230908134054_thumb.webp"
   },
   {
     "id": 12,
     "nama_menu": "ES TEKLEK",
     "harga": "6819",
     "variants": "[]",
-    "sold_out": "No"
+    "sold_out": "No",
+    "image_url": "https://esb-order.oss-ap-southeast-5.aliyuncs.com/images/app/menu/MNU_6_20230908135711_thumb.webp"
   },
   {
     "id": 13,
     "nama_menu": "ES SLUKU BATHOK",
     "harga": "6819",
     "variants": "[]",
-    "sold_out": "No"
+    "sold_out": "No",
+    "image_url": "https://esb-order.oss-ap-southeast-5.aliyuncs.com/images/app/menu/MNU_5_20230908135433_thumb.webp"
   },
   {
     "id": 14,
     "nama_menu": "ES PETAK UMPET",
     "harga": "9546",
     "variants": "[]",
-    "sold_out": "No"
+    "sold_out": "No",
+    "image_url": "https://esb-order.oss-ap-southeast-5.aliyuncs.com/images/app/menu/MNU_4_20230908135128_thumb.webp"
   },
   {
     "id": 15,
     "nama_menu": "AIR MINERAL",
     "harga": "5000",
     "variants": "[]",
-    "sold_out": "No"
+    "sold_out": "No",
+    "image_url": "https://esb-order.oss-ap-southeast-5.aliyuncs.com/images/app/menu/MNU_924_20251103165722_thumb.webp"
   },
   {
     "id": 16,
     "nama_menu": "TEA",
     "harga": "5000",
     "variants": "['HOT', 'ICED']",
-    "sold_out": "No"
+    "sold_out": "No",
+    "image_url": "https://esb-order.oss-ap-southeast-5.aliyuncs.com/images/app/menu/MNU_912_20251101091556_thumb.webp"
   },
   {
     "id": 17,
     "nama_menu": "ORANGE",
     "harga": "5910",
     "variants": "['ICED', 'HOT']",
-    "sold_out": "No"
+    "sold_out": "No",
+    "image_url": "https://esb-order.oss-ap-southeast-5.aliyuncs.com/images/app/menu/MNU_971_20251101091634_thumb.webp"
   },
   {
     "id": 18,
     "nama_menu": "LEMON TEA",
     "harga": "6819",
     "variants": "['ICED', 'HOT']",
-    "sold_out": "No"
+    "sold_out": "No",
+    "image_url": "https://esb-order.oss-ap-southeast-5.aliyuncs.com/images/app/menu/MNU__20251029173554_thumb.webp"
   },
   {
     "id": 19,
     "nama_menu": "CHOCOAN",
     "harga": "8637",
     "variants": "['ICED', 'HOT']",
-    "sold_out": "No"
+    "sold_out": "No",
+    "image_url": "https://esb-order.oss-ap-southeast-5.aliyuncs.com/images/app/menu/MNU__20251030043823_thumb.webp"
   },
   {
     "id": 20,
     "nama_menu": "VANILLA LATTE",
     "harga": "8637",
     "variants": "['ICED', 'HOT']",
-    "sold_out": "No"
+    "sold_out": "No",
+    "image_url": "https://esb-order.oss-ap-southeast-5.aliyuncs.com/images/app/menu/MNU__20251030041311_thumb.webp"
   },
   {
     "id": 21,
     "nama_menu": "TEH TARIK",
     "harga": "7273",
     "variants": "['ICED', 'HOT']",
-    "sold_out": "No"
+    "sold_out": "No",
+    "image_url": "https://esb-order.oss-ap-southeast-5.aliyuncs.com/images/app/menu/MNU__20251030041816_thumb.webp"
   },
   {
     "id": 22,
     "nama_menu": "THAI TEA",
     "harga": "8637",
     "variants": "['ICED']",
-    "sold_out": "No"
+    "sold_out": "No",
+    "image_url": "https://esb-order.oss-ap-southeast-5.aliyuncs.com/images/app/menu/MNU__20251031084223_thumb.webp"
   },
   {
     "id": 23,
     "nama_menu": "THAI GREEN TEA",
     "harga": "8637",
     "variants": "['ICED']",
-    "sold_out": "No"
+    "sold_out": "No",
+    "image_url": "https://esb-order.oss-ap-southeast-5.aliyuncs.com/images/app/menu/MNU__20251031084555_thumb.webp"
   }
 ]

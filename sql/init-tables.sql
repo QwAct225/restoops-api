@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS menu_data (
     harga DECIMAL(10,2) NOT NULL,
     variants JSONB,
     sold_out VARCHAR(10) DEFAULT 'No',
+    image_url TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -20,7 +21,7 @@ CREATE TABLE IF NOT EXISTS reservation_data (
     name VARCHAR(200) NOT NULL,
     reservation_table INT NOT NULL,
     token VARCHAR(50) UNIQUE NOT NULL,
-    ordered_menu TEXT NOT NULL,
+    ordered_menu JSONB NOT NULL,
     duration INT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
