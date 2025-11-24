@@ -1,65 +1,165 @@
 import time
 import pandas as pd
+import os
 from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.options import Options as ChromeOptions
+from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup
 class MenuScraper:
-    def __init__(self, url):
+    def __init__(self, url, browser='auto'):
         self.url = url
         self.driver = None
         self.menu_data = []
+        self.browser = browser.lower()
+        
+    def detect_browser(self):
+        """Deteksi browser yang tersedia di sistem"""
+        browsers = {
+            'brave': [
+                '/usr/bin/brave-browser',
+                '/usr/bin/brave',
+                '/snap/bin/brave',
+                os.path.expanduser('~/.local/bin/brave'),
+            ],
+            'chrome': [
+                '/usr/bin/google-chrome',
+                '/usr/bin/google-chrome-stable',
+                '/usr/bin/chromium-browser',
+                '/usr/bin/chromium',
+                '/snap/bin/chromium',
+            ],
+            'firefox': [
+                '/usr/bin/firefox',
+                '/snap/bin/firefox',
+            ]
+        }
+        
+        for browser_name, paths in browsers.items():
+            for path in paths:
+                if os.path.exists(path):
+                    print(f"✓ Ditemukan {browser_name.capitalize()}: {path}")
+                    return browser_name, path
+        
+        return None, None
         
     def setup_driver(self, headless=True):
-        chrome_options = Options()
-        
-        if headless:
-            chrome_options.add_argument('--headless=new') 
-            
-        chrome_options.add_argument('--no-sandbox')
-        chrome_options.add_argument('--disable-dev-shm-usage')
-        chrome_options.add_argument('--disable-gpu')
-        chrome_options.add_argument('--window-size=1920,1080')
-        chrome_options.add_argument('--disable-blink-features=AutomationControlled')
-        chrome_options.add_argument('--disable-extensions')
-        chrome_options.add_argument('--disable-setuid-sandbox')
-        chrome_options.add_argument('--start-maximized')
-        chrome_options.add_argument('user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36')
-        chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
-        chrome_options.add_experimental_option('useAutomationExtension', False)
-        
-        chrome_options.page_load_strategy = 'normal'  
-        
         try:
-            print("Menginstall/mengupdate Chrome driver...")
-            service = Service(ChromeDriverManager().install())
-            service.start_error_message = "Chrome driver gagal dijalankan"
-            self.driver = webdriver.Chrome(service=service, options=chrome_options)
+            # Auto-detect browser jika dipilih
+            browser_to_use = self.browser
+            browser_path = None
             
-            self.driver.execute_cdp_cmd('Page.addScriptToEvaluateOnNewDocument', {
-                'source': '''
-                    Object.defineProperty(navigator, 'webdriver', {
-                        get: () => undefined
-                    })
-                '''
-            })
+            if self.browser == 'auto':
+                print("Mendeteksi browser yang tersedia...")
+                detected_browser, detected_path = self.detect_browser()
+                if detected_browser:
+                    browser_to_use = detected_browser
+                    browser_path = detected_path
+                    print(f"Menggunakan {detected_browser.capitalize()}\n")
+                else:
+                    raise Exception("Tidak ada browser yang terdeteksi (Chrome, Brave, atau Firefox)")
             
-            self.driver.set_page_load_timeout(90)  
-            self.driver.implicitly_wait(15)  
-            
-            print("Browser siap digunakan")
-            
+            # Setup berdasarkan browser yang dipilih
+            if browser_to_use in ['chrome', 'brave']:
+                self._setup_chromium_driver(headless, browser_to_use, browser_path)
+            elif browser_to_use == 'firefox':
+                self._setup_firefox_driver(headless, browser_path)
+            else:
+                raise ValueError(f"Browser '{self.browser}' tidak didukung. Pilih: chrome, brave, firefox, atau auto")
+                
         except Exception as e:
             print(f"Error saat setup driver: {str(e)}")
             print("\nCoba solusi berikut:")
-            print("1. Update Chrome browser ke versi terbaru")
-            print("2. Restart terminal/command prompt")
-            print("3. Hapus cache webdriver: %USERPROFILE%\\.wdm")
+            print("1. Install salah satu browser: Brave, Chrome, atau Firefox")
+            print("2. Pastikan browser terinstall di lokasi standar")
+            print("3. Atau spesifikasikan browser: MenuScraper(url, browser='brave')")
             raise
+    
+    def _setup_chromium_driver(self, headless=True, browser_name='chrome', browser_path=None):
+        """Setup driver untuk Chromium-based browsers (Chrome/Brave)"""
+        chrome_options = ChromeOptions()
+        
+        # Set binary location untuk Brave
+        if browser_name == 'brave' and browser_path:
+            chrome_options.binary_location = browser_path
+        elif browser_name == 'brave' and not browser_path:
+            # Cari path Brave secara manual
+            _, detected_path = self.detect_browser()
+            if detected_path:
+                chrome_options.binary_location = detected_path
+        
+        if headless:
+            chrome_options.add_argument('--headless=new')
+            
+        # Arguments untuk fix DevToolsActivePort error di Linux (terutama Snap)
+        chrome_options.add_argument('--no-sandbox')
+        chrome_options.add_argument('--disable-dev-shm-usage')
+        chrome_options.add_argument('--disable-gpu')
+        chrome_options.add_argument('--disable-software-rasterizer')
+        chrome_options.add_argument('--disable-setuid-sandbox')
+        chrome_options.add_argument('--remote-debugging-port=9222')
+        chrome_options.add_argument('--window-size=1920,1080')
+        chrome_options.add_argument('--start-maximized')
+        
+        # Disable automation detection
+        chrome_options.add_argument('--disable-blink-features=AutomationControlled')
+        chrome_options.add_argument('--disable-extensions')
+        chrome_options.add_argument('user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36')
+        chrome_options.add_experimental_option("excludeSwitches", ["enable-automation", "enable-logging"])
+        chrome_options.add_experimental_option('useAutomationExtension', False)
+        
+        # Additional stability options
+        # Prevent multiple windows
+        chrome_options.add_argument('--disable-popup-blocking')
+        chrome_options.add_argument('--disable-background-networking')
+        chrome_options.add_argument('--metrics-recording-only')
+        chrome_options.add_argument('--mute-audio')
+        
+        chrome_options.page_load_strategy = 'normal'
+        
+        print(f"Menyiapkan ChromeDriver untuk {browser_name.capitalize()}...")
+        # Selenium 4.6+ has built-in Selenium Manager that auto-downloads correct driver
+        # No need to manually specify driver path
+        self.driver = webdriver.Chrome(options=chrome_options)
+        
+        self.driver.execute_cdp_cmd('Page.addScriptToEvaluateOnNewDocument', {
+            'source': '''
+                Object.defineProperty(navigator, 'webdriver', {
+                    get: () => undefined
+                })
+            '''
+        })
+        
+        self.driver.set_page_load_timeout(90)
+        self.driver.implicitly_wait(15)
+        print(f"{browser_name.capitalize()} browser siap digunakan")
+    
+    def _setup_firefox_driver(self, headless=True, browser_path=None):
+        """Setup driver untuk Firefox"""
+        firefox_options = FirefoxOptions()
+        
+        if browser_path:
+            firefox_options.binary_location = browser_path
+        
+        if headless:
+            firefox_options.add_argument('--headless')
+        
+        firefox_options.add_argument('--width=1920')
+        firefox_options.add_argument('--height=1080')
+        firefox_options.set_preference('dom.webdriver.enabled', False)
+        firefox_options.set_preference('useAutomationExtension', False)
+        firefox_options.set_preference('general.useragent.override', 
+                                      'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0')
+        
+        print("Menyiapkan GeckoDriver untuk Firefox...")
+        # Selenium Manager will auto-download correct GeckoDriver
+        self.driver = webdriver.Firefox(options=firefox_options)
+        
+        self.driver.set_page_load_timeout(90)
+        self.driver.implicitly_wait(15)
+        print("Firefox browser siap digunakan")
         
     def scrape_menu(self, headless=False):
         try:
@@ -84,66 +184,42 @@ class MenuScraper:
                     print("Timeout menunggu element menu, melanjutkan parsing...")
             
             print("Menunggu JavaScript loading...")
-            time.sleep(5)
+            time.sleep(4)
             
-            print("Mencari dan mengklik semua tab kategori...")
-            all_menu_data = []
+            print("\nMelakukan scroll untuk load semua menu...")
             
-            try:
-                tabs = self.driver.find_elements(By.CSS_SELECTOR, "button[role='tab'], .mat-mdc-tab")
-                print(f"Ditemukan {len(tabs)} tab kategori")
+            # Scroll 2 rounds dengan coverage penuh
+            for scroll_round in range(2):
+                print(f"  Round {scroll_round + 1}: Scroll dari atas ke bawah...")
                 
-                for i, tab in enumerate(tabs):
-                    try:
-                        self.driver.execute_script("arguments[0].click();", tab)
-                        tab_text = tab.text.strip()
-                        print(f"\n  Tab {i+1}: {tab_text}")
-                        time.sleep(3)  
-                        
-                        print(f"  Melakukan scroll di tab '{tab_text}'...")
-                        last_height = self.driver.execute_script("return document.body.scrollHeight")
-                        scroll_attempts = 0
-                        
-                        while scroll_attempts < 5:
-                            self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-                            time.sleep(2)
-                            new_height = self.driver.execute_script("return document.body.scrollHeight")
-                            
-                            if new_height == last_height:
-                                break
-                            last_height = new_height
-                            scroll_attempts += 1
-                        
-                        self.driver.execute_script("window.scrollTo(0, 0);")
-                        time.sleep(1)
-                        
-                    except Exception as e:
-                        print(f"  Error mengklik tab {i+1}: {str(e)}")
-                        continue
-                        
-            except Exception as e:
-                print(f"Tidak dapat menemukan tab, melanjutkan dengan single page: {str(e)}")
-            
-            print("\nMelakukan scroll final untuk load semua menu...")
-            last_height = self.driver.execute_script("return document.body.scrollHeight")
-            scroll_attempts = 0
-            
-            for i in range(10):
-                self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-                time.sleep(2)
+                # Scroll to top first
+                self.driver.execute_script("window.scrollTo(0, 0);")
+                time.sleep(0.8)
+                
+                # Scroll down gradually with more coverage
+                last_height = self.driver.execute_script("return document.body.scrollHeight")
+                scroll_position = 0
+                scroll_step = 250  # Smaller increments to trigger lazy load
+                
+                while scroll_position < last_height:
+                    scroll_position += scroll_step
+                    self.driver.execute_script(f"window.scrollTo(0, {scroll_position});")
+                    time.sleep(0.4)  # Give time for lazy loading
+                
+                # Scroll to very bottom multiple times
+                for _ in range(3):
+                    self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+                    time.sleep(0.8)
+                
                 new_height = self.driver.execute_script("return document.body.scrollHeight")
-                print(f"  Scroll #{i+1}, height: {new_height}")
-                
-                if new_height == last_height:
-                    scroll_attempts += 1
-                    if scroll_attempts >= 3:
-                        break
-                else:
-                    scroll_attempts = 0
-                last_height = new_height
+                print(f"    Height: {new_height}")
             
-            print("Selesai scroll, tunggu loading final...")
-            time.sleep(3)
+            # Final comprehensive scroll
+            print("  Scroll final...")
+            self.driver.execute_script("window.scrollTo(0, 0);")
+            time.sleep(1)
+            self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+            time.sleep(2)
             
             page_source = self.driver.page_source
             print("\nParsing HTML...")
@@ -217,11 +293,22 @@ class MenuScraper:
             self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", menu_element)
             time.sleep(0.3)
             
+            # Click and wait for modal
             menu_element.click()
-            time.sleep(1.5)  
+            time.sleep(0.5)
             
-            variants = self._parse_variants_from_modal()
+            # Wait for modal to appear
+            try:
+                WebDriverWait(self.driver, 3).until(
+                    EC.presence_of_element_located((By.CLASS_NAME, "menu-image-banner"))
+                )
+            except:
+                pass
+            
+            time.sleep(0.8)  # Additional wait for image to load
+            
             image_url = self._get_image_url_from_modal()
+            variants = self._parse_variants_from_modal()
             self._close_modal()
             
         except Exception:
@@ -306,46 +393,95 @@ class MenuScraper:
     
     def _get_image_url_from_modal(self):
         """Extract image URL from modal and convert to thumbnail version"""
+        import re
+        
         try:
-            modal_html = self.driver.page_source
-            modal_soup = BeautifulSoup(modal_html, 'lxml')
+            # Method 1: Check menu-image-banner with background-image
+            banner_elements = self.driver.find_elements(By.CLASS_NAME, "menu-image-banner")
+            for element in banner_elements:
+                if element.is_displayed():
+                    style = element.get_attribute('style')
+                    if style and 'background-image' in style:
+                        match = re.search(r'url\(["\']?([^"\')]+)["\']?\)', style)
+                        if match:
+                            url = match.group(1)
+                            # Convert to thumbnail version
+                            if '_optim.webp' in url:
+                                return url.replace('_optim.webp', '_thumb.webp')
+                            elif '.webp' in url and '_thumb.webp' not in url:
+                                return url.replace('.webp', '_thumb.webp')
+                            return url
             
-            # Find the div with class 'menu-image-banner' that has style with background-image
-            image_banner = modal_soup.find('div', class_='menu-image-banner')
+            # Method 2: Check any element with background-image containing menu URL
+            all_with_bg = self.driver.find_elements(By.XPATH, "//*[contains(@style, 'background-image')]")
+            for element in all_with_bg:
+                if element.is_displayed():
+                    style = element.get_attribute('style')
+                    if style and ('menu' in style.lower() or 'mnu' in style.lower()):
+                        match = re.search(r'url\(["\']?([^"\')]+)["\']?\)', style)
+                        if match:
+                            url = match.group(1)
+                            if '_optim.webp' in url:
+                                return url.replace('_optim.webp', '_thumb.webp')
+                            elif '.webp' in url and '_thumb.webp' not in url:
+                                return url.replace('.webp', '_thumb.webp')
+                            return url
             
-            if image_banner and image_banner.get('style'):
-                style = image_banner.get('style')
-                # Extract URL from background-image: url("...")
-                import re
-                match = re.search(r'url\(["\']?([^"\')]+)["\']?\)', style)
-                if match:
-                    url = match.group(1)
-                    # Convert _optim.webp to _thumb.webp
-                    if '_optim.webp' in url:
-                        url = url.replace('_optim.webp', '_thumb.webp')
-                    elif '.webp' in url and '_thumb.webp' not in url:
-                        # If it's a webp but not already optimized, try to add _thumb before .webp
-                        url = url.replace('.webp', '_thumb.webp')
-                    return url
-        except Exception as e:
-            print(f"  Error extracting image URL: {str(e)}")
+            # Method 3: Check img tags in modal
+            img_elements = self.driver.find_elements(By.CSS_SELECTOR, "img[src*='menu'], img[src*='MNU'], img[src*='aliyuncs']")
+            for img in img_elements:
+                if img.is_displayed():
+                    src = img.get_attribute('src')
+                    if src and ('menu' in src.lower() or 'mnu' in src.upper()):
+                        if '_optim.webp' in src:
+                            return src.replace('_optim.webp', '_thumb.webp')
+                        elif '.webp' in src and '_thumb.webp' not in src:
+                            return src.replace('.webp', '_thumb.webp')
+                        return src
+                    
+        except Exception:
+            pass
         
         return None
     
     def _close_modal(self):
+        """Close modal with multiple fallback methods"""
         try:
-            close_button = self.driver.find_element(By.XPATH, "//button[contains(@class, 'close') or contains(@aria-label, 'close')]")
-            close_button.click()
-            time.sleep(0.5)
-        except Exception:
-            try:
-                overlay = self.driver.find_element(By.CLASS_NAME, "cdk-overlay-backdrop")
-                overlay.click()
-                time.sleep(0.5)
-            except Exception:
-                from selenium.webdriver.common.keys import Keys
-                self.driver.find_element(By.TAG_NAME, 'body').send_keys(Keys.ESCAPE)
-                time.sleep(0.5)
+            # Method 1: Find close button
+            close_buttons = self.driver.find_elements(By.XPATH, "//button[contains(@class, 'close') or contains(@aria-label, 'Close') or contains(@aria-label, 'close')]")
+            for btn in close_buttons:
+                try:
+                    if btn.is_displayed() and btn.is_enabled():
+                        self.driver.execute_script("arguments[0].click();", btn)
+                        time.sleep(0.3)
+                        return
+                except:
+                    continue
+        except:
+            pass
+        
+        try:
+            # Method 2: Click backdrop
+            overlays = self.driver.find_elements(By.CLASS_NAME, "cdk-overlay-backdrop")
+            for overlay in overlays:
+                try:
+                    if overlay.is_displayed():
+                        self.driver.execute_script("arguments[0].click();", overlay)
+                        time.sleep(0.3)
+                        return
+                except:
+                    continue
+        except:
+            pass
+        
+        try:
+            # Method 3: ESC key
+            from selenium.webdriver.common.keys import Keys
+            from selenium.webdriver.common.action_chains import ActionChains
+            ActionChains(self.driver).send_keys(Keys.ESCAPE).perform()
+            time.sleep(0.3)
+        except:
+            pass
     
     def save_to_csv(self, output_path):
         if not self.menu_data:
