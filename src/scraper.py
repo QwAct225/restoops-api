@@ -16,7 +16,6 @@ class MenuScraper:
         self.browser = browser.lower()
         
     def detect_browser(self):
-        """Deteksi browser yang tersedia di sistem"""
         browsers = {
             'brave': [
                 '/usr/bin/brave-browser',
@@ -47,7 +46,6 @@ class MenuScraper:
         
     def setup_driver(self, headless=True):
         try:
-            # Auto-detect browser jika dipilih
             browser_to_use = self.browser
             browser_path = None
             
@@ -61,7 +59,6 @@ class MenuScraper:
                 else:
                     raise Exception("Tidak ada browser yang terdeteksi (Chrome, Brave, atau Firefox)")
             
-            # Setup berdasarkan browser yang dipilih
             if browser_to_use in ['chrome', 'brave']:
                 self._setup_chromium_driver(headless, browser_to_use, browser_path)
             elif browser_to_use == 'firefox':
@@ -78,14 +75,11 @@ class MenuScraper:
             raise
     
     def _setup_chromium_driver(self, headless=True, browser_name='chrome', browser_path=None):
-        """Setup driver untuk Chromium-based browsers (Chrome/Brave)"""
         chrome_options = ChromeOptions()
         
-        # Set binary location untuk Brave
         if browser_name == 'brave' and browser_path:
             chrome_options.binary_location = browser_path
         elif browser_name == 'brave' and not browser_path:
-            # Cari path Brave secara manual
             _, detected_path = self.detect_browser()
             if detected_path:
                 chrome_options.binary_location = detected_path
@@ -93,7 +87,6 @@ class MenuScraper:
         if headless:
             chrome_options.add_argument('--headless=new')
             
-        # Arguments untuk fix DevToolsActivePort error di Linux (terutama Snap)
         chrome_options.add_argument('--no-sandbox')
         chrome_options.add_argument('--disable-dev-shm-usage')
         chrome_options.add_argument('--disable-gpu')
@@ -102,16 +95,11 @@ class MenuScraper:
         chrome_options.add_argument('--remote-debugging-port=9222')
         chrome_options.add_argument('--window-size=1920,1080')
         chrome_options.add_argument('--start-maximized')
-        
-        # Disable automation detection
         chrome_options.add_argument('--disable-blink-features=AutomationControlled')
         chrome_options.add_argument('--disable-extensions')
         chrome_options.add_argument('user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36')
         chrome_options.add_experimental_option("excludeSwitches", ["enable-automation", "enable-logging"])
         chrome_options.add_experimental_option('useAutomationExtension', False)
-        
-        # Additional stability options
-        # Prevent multiple windows
         chrome_options.add_argument('--disable-popup-blocking')
         chrome_options.add_argument('--disable-background-networking')
         chrome_options.add_argument('--metrics-recording-only')
@@ -120,8 +108,6 @@ class MenuScraper:
         chrome_options.page_load_strategy = 'normal'
         
         print(f"Menyiapkan ChromeDriver untuk {browser_name.capitalize()}...")
-        # Selenium 4.6+ has built-in Selenium Manager that auto-downloads correct driver
-        # No need to manually specify driver path
         self.driver = webdriver.Chrome(options=chrome_options)
         
         self.driver.execute_cdp_cmd('Page.addScriptToEvaluateOnNewDocument', {
@@ -137,7 +123,6 @@ class MenuScraper:
         print(f"{browser_name.capitalize()} browser siap digunakan")
     
     def _setup_firefox_driver(self, headless=True, browser_path=None):
-        """Setup driver untuk Firefox"""
         firefox_options = FirefoxOptions()
         
         if browser_path:
@@ -154,7 +139,6 @@ class MenuScraper:
                                       'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0')
         
         print("Menyiapkan GeckoDriver untuk Firefox...")
-        # Selenium Manager will auto-download correct GeckoDriver
         self.driver = webdriver.Firefox(options=firefox_options)
         
         self.driver.set_page_load_timeout(90)
@@ -188,25 +172,21 @@ class MenuScraper:
             
             print("\nMelakukan scroll untuk load semua menu...")
             
-            # Scroll 2 rounds dengan coverage penuh
             for scroll_round in range(2):
                 print(f"  Round {scroll_round + 1}: Scroll dari atas ke bawah...")
                 
-                # Scroll to top first
                 self.driver.execute_script("window.scrollTo(0, 0);")
                 time.sleep(0.8)
                 
-                # Scroll down gradually with more coverage
                 last_height = self.driver.execute_script("return document.body.scrollHeight")
                 scroll_position = 0
-                scroll_step = 250  # Smaller increments to trigger lazy load
+                scroll_step = 250 
                 
                 while scroll_position < last_height:
                     scroll_position += scroll_step
                     self.driver.execute_script(f"window.scrollTo(0, {scroll_position});")
-                    time.sleep(0.4)  # Give time for lazy loading
+                    time.sleep(0.4) 
                 
-                # Scroll to very bottom multiple times
                 for _ in range(3):
                     self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
                     time.sleep(0.8)
@@ -214,7 +194,6 @@ class MenuScraper:
                 new_height = self.driver.execute_script("return document.body.scrollHeight")
                 print(f"    Height: {new_height}")
             
-            # Final comprehensive scroll
             print("  Scroll final...")
             self.driver.execute_script("window.scrollTo(0, 0);")
             time.sleep(1)
@@ -293,11 +272,9 @@ class MenuScraper:
             self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", menu_element)
             time.sleep(0.3)
             
-            # Click and wait for modal
             menu_element.click()
             time.sleep(0.5)
             
-            # Wait for modal to appear
             try:
                 WebDriverWait(self.driver, 3).until(
                     EC.presence_of_element_located((By.CLASS_NAME, "menu-image-banner"))
@@ -305,7 +282,7 @@ class MenuScraper:
             except:
                 pass
             
-            time.sleep(0.8)  # Additional wait for image to load
+            time.sleep(0.8)
             
             image_url = self._get_image_url_from_modal()
             variants = self._parse_variants_from_modal()
@@ -392,11 +369,9 @@ class MenuScraper:
         return variants
     
     def _get_image_url_from_modal(self):
-        """Extract image URL from modal and convert to thumbnail version"""
         import re
         
         try:
-            # Method 1: Check menu-image-banner with background-image
             banner_elements = self.driver.find_elements(By.CLASS_NAME, "menu-image-banner")
             for element in banner_elements:
                 if element.is_displayed():
@@ -412,7 +387,6 @@ class MenuScraper:
                                 return url.replace('.webp', '_thumb.webp')
                             return url
             
-            # Method 2: Check any element with background-image containing menu URL
             all_with_bg = self.driver.find_elements(By.XPATH, "//*[contains(@style, 'background-image')]")
             for element in all_with_bg:
                 if element.is_displayed():
@@ -427,7 +401,6 @@ class MenuScraper:
                                 return url.replace('.webp', '_thumb.webp')
                             return url
             
-            # Method 3: Check img tags in modal
             img_elements = self.driver.find_elements(By.CSS_SELECTOR, "img[src*='menu'], img[src*='MNU'], img[src*='aliyuncs']")
             for img in img_elements:
                 if img.is_displayed():
@@ -445,9 +418,7 @@ class MenuScraper:
         return None
     
     def _close_modal(self):
-        """Close modal with multiple fallback methods"""
         try:
-            # Method 1: Find close button
             close_buttons = self.driver.find_elements(By.XPATH, "//button[contains(@class, 'close') or contains(@aria-label, 'Close') or contains(@aria-label, 'close')]")
             for btn in close_buttons:
                 try:
@@ -461,7 +432,6 @@ class MenuScraper:
             pass
         
         try:
-            # Method 2: Click backdrop
             overlays = self.driver.find_elements(By.CLASS_NAME, "cdk-overlay-backdrop")
             for overlay in overlays:
                 try:
@@ -475,7 +445,6 @@ class MenuScraper:
             pass
         
         try:
-            # Method 3: ESC key
             from selenium.webdriver.common.keys import Keys
             from selenium.webdriver.common.action_chains import ActionChains
             ActionChains(self.driver).send_keys(Keys.ESCAPE).perform()

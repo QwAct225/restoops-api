@@ -16,9 +16,7 @@ def main():
     print(f"URL Target: {url}")
     print("="*60)
     
-    # Pilih browser: 'auto', 'brave', 'chrome', atau 'firefox'
-    # 'auto' akan otomatis mendeteksi browser yang tersedia
-    browser_choice = 'auto'  # Ubah sesuai kebutuhan: 'brave', 'chrome', 'firefox', atau 'auto'
+    browser_choice = 'auto'
     
     try:
         print(f"\nBrowser dipilih: {browser_choice}")

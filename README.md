@@ -117,18 +117,6 @@ Buka browser dan akses:
 
 ## 🔧 **Troubleshooting**
 
-### **Port Already in Use**
-
-```bash
-# Check what's using port 5432
-netstat -ano | findstr :5432  # Windows
-lsof -i :5432                 # Mac/Linux
-
-# Change port in .env file
-DB_PORT=5433
-API_PORT=8001
-```
-
 ### **Database Connection Error**
 
 ```bash
