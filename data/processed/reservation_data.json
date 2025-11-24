@@ -3,7 +3,7 @@
     "id": 1,
     "name": "John Doe",
     "reservation_table": 11,
-    "token": "9MTXKLNP7Q",
+    "token": "B6LHLALEXV",
     "ordered_menu": [
       "3[LEVEL 2]",
       "16"
@@ -14,7 +14,7 @@
     "id": 2,
     "name": "Bob Hob",
     "reservation_table": 7,
-    "token": "FZM8BKY82Q",
+    "token": "E97R42S6DB",
     "ordered_menu": [
       "4[LEVEL 4]",
       "8"
@@ -25,7 +25,7 @@
     "id": 3,
     "name": "Alice Smith",
     "reservation_table": 3,
-    "token": "5YK7DBTMY7",
+    "token": "GBMQ6O8J4P",
     "ordered_menu": [
       "1[CHOCOLATE]",
       "16[HOT]",
@@ -37,7 +37,7 @@
     "id": 4,
     "name": "Michael Chen",
     "reservation_table": 15,
-    "token": "D06ZK12ER7",
+    "token": "I433C0IWVB",
     "ordered_menu": [
       "3[LEVEL 0]",
       "11",
@@ -49,7 +49,7 @@
     "id": 5,
     "name": "Sarah Johnson",
     "reservation_table": 8,
-    "token": "XLHIVZL7UD",
+    "token": "8OEF3ORG0A",
     "ordered_menu": [
       "4[LEVEL 6 (+Rp 910)]",
       "7",

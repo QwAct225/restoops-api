@@ -16,8 +16,13 @@ def main():
     print(f"URL Target: {url}")
     print("="*60)
     
+    # Pilih browser: 'auto', 'brave', 'chrome', atau 'firefox'
+    # 'auto' akan otomatis mendeteksi browser yang tersedia
+    browser_choice = 'auto'  # Ubah sesuai kebutuhan: 'brave', 'chrome', 'firefox', atau 'auto'
+    
     try:
-        scraper = MenuScraper(url)
+        print(f"\nBrowser dipilih: {browser_choice}")
+        scraper = MenuScraper(url, browser=browser_choice)
         
         print("\nMemulai scraping...")
         print("Gunakan headless=False jika ada masalah dengan headless mode")
